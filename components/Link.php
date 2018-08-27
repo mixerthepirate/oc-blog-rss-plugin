@@ -1,13 +1,17 @@
-<?php namespace SoBoRed\Rss\Components;
+<?php namespace HolidayPirates\RssFeed\Components;
 
 use DB;
 use App;
 use File;
+use Illuminate\Database\Eloquent\Collection;
 use Request;
-use DateTime;
 use Cms\Classes\ComponentBase;
-use SoBoRed\Rss\Models\Settings;
+use HolidayPirates\RssFeed\Models\Settings;
 
+/**
+ * Class Link
+ * @package HolidayPirates\RssFeed\Components
+ */
 class Link extends ComponentBase
 {
     public $feedBurnerAddress;
@@ -16,7 +20,10 @@ class Link extends ComponentBase
     public $posts;
     public $file;
 
-    public function componentDetails()
+    /**
+     * @return array
+     */
+    public function componentDetails(): array
     {
         return [
             'name'        => 'Link to RSS Feed',
@@ -24,7 +31,10 @@ class Link extends ComponentBase
         ];
     }
 
-    public function defineProperties()
+    /**
+     * @return array
+     */
+    public function defineProperties(): array
     {
         return [
             'feedBurnerAddress' => [
@@ -48,6 +58,9 @@ class Link extends ComponentBase
         ];
     }
 
+    /**
+     *
+     */
     public function onRun()
     {
         $this->posts = $this->page['posts'] = $this->loadPosts();
@@ -58,12 +71,15 @@ class Link extends ComponentBase
         $this->feedBurnerLink = $this->page['feedBurnerLink'] = "http://feeds.feedburner.com/" . $this->feedBurnerAddress;
     }
 
-    protected function loadPosts()
+    /**
+     * @return Collection
+     */
+    protected function loadPosts(): Collection
     {
         $posts = Db::table('rainlab_blog_posts')
-                     ->orderBy('published_at', 'desc')
-                     ->where('published', '=', '1')
-                     ->get();
+            ->orderBy('published_at', 'desc')
+            ->where('published', '=', '1')
+            ->get();
 
         return $posts;
     }
